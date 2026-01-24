@@ -38,7 +38,7 @@ cp .env.example .env
 docker-compose up -d
 ```
 
-By default volumes are from `./db` and `./note_annotation.template` to persist the database and access the annotation note template.
+By default volumes are from `./db` and `./note_annotation.template` are mapped to persist the database and forward the annotation note template.
 
 
 ### Manual installation
@@ -72,7 +72,7 @@ uv run python manage.py runserver
 uv run gunicorn core.wsgi
 ```
 
-__Note:__ since Paperless Annitations uses some in process memory for caching and threaded background tasks, its recommended to use only one gunicorn worker.
+__Note:__ since the app uses in process memory for caching and threaded background tasks, its recommended to use only one gunicorn worker.
 
 
 ### Create an admin user
@@ -92,14 +92,14 @@ Or use the web-based initializer at `http://<your-server-address>:8000/initializ
 
 - `SECRET_KEY` - Django secret key (choose a random string)
 - `DEBUG` - Enable Django debug mode (`true`/`false`); set to `false` in production
-- `LOG_LEVEL` - Logging level (e.g. `DEBUG`, `INFO`, `WARNING`, `ERROR`)
+- `LOG_LEVEL` - Logging level `DEBUG`, `INFO`, `WARNING`, `ERROR` (default: `INFO` for production, `DEBUG` for debug mode)
 - `ALLOWED_HOSTS` - Comma-separated list of allowed hosts
 - `PAPERLESS_URL` - URL to your Paperless-ngx instance
 - `BASE_URL` - Base URL where Paperless Annotations is hosted (e.g. `http://localhost:8000` or `https://annotations.yourdomain.com`)
-- `ANNO_SERIALIZER` - Name of the annotation serializer (see "Customize annotations format" below)
-- `ENABLE_AUTO_UPDATE_LINKS` - Enable automatic updating of document links (`true`/`false`)
-- `UPDATE_INTERVAL_MINS` - Interval (minutes) for automatic link updates
-- `CUSTOM_FIELD_NAME` - Name of the custom field in Paperless-ngx used to store document links
+- `ANNO_SERIALIZER` - Name of the annotation serializer - see "Customize annotations format" below (default: `85gj`)
+- `ENABLE_AUTO_UPDATE_LINKS` - Enable automatic updating of document links, `true`/`false` (default: `true`)
+- `UPDATE_INTERVAL_MINS` - Interval (minutes) for automatic link updates (default: `60`)
+- `CUSTOM_FIELD_NAME` - Name of the custom field in Paperless-ngx used to store document links (Default: `Annotations`)
 - `ANNO_STORAGE` - Annotation storage backend: `paperless_notes` or `database` (default: `paperless_notes`)
 
 ## Auto-update document links
@@ -109,7 +109,7 @@ To access annotations directly from Paperless-ngx, each document can be linked t
 ![Custom Field Example](docs/images/custom_field.png)
 
 You can enable automatic updating of these links by setting the `ENABLE_AUTO_UPDATE_LINKS` environment variable to `true`.
-This will periodically update the links in a custom field of the Paperless-ngx documents.
+This will periodically update the links in a custom field of all Paperless-ngx documents.
 The name of the custom field can be set using the `CUSTOM_FIELD_NAME` environment variable (default is `Annotations`).
 
 Ensure the `BASE_URL` environment variable points to the base URL where Paperless Annotations is hosted.
@@ -205,8 +205,6 @@ There are two serializers defined in `annostorage.py`:
 - `ji2`: A human-readable serializer that stores pretty-printed JSON.
 
 __Note:__ The serializer may affect full-text searchability of annotation content in Paperless-ngx.
-
-
 
 
 ## License
