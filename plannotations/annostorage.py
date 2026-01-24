@@ -108,8 +108,6 @@ class PaperlessNotesStorage(AnnoStorage):
 
     ANNOTATION_CONTENT_BEGIN = "------------ DATA BEGIN ------------"
     ANNOTATION_CONTENT_END = "------------ DATA END ------------"
-    DATA_FIELD = "d"
-    SERIALIZER_FIELD = "s"
 
     def __init__(self, paperless: PaperlessAPI):
         self.default_anno_serializer = AnnoSerializer.get_serializer_by_name(
@@ -158,7 +156,6 @@ class PaperlessNotesStorage(AnnoStorage):
 
     def _anno_to_note_content(self, annotation: Annotation) -> str:
         """Serialize an annotation for storage in a Paperless note."""
-        # Format created date to be more readable: 2026-01-11 02:28
 
         serialized = (
             self.default_anno_serializer.serialize(annotation.model_dump()) + "\n"
