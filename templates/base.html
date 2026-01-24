@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/logo.png' %}">
+    <title>{% block title %}Paperless Annotations{% endblock %}</title>
+    <script>
+        (function () {
+            const theme = localStorage.getItem('theme') ||
+                (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <style>
+        :root {
+            /* Light theme (default) */
+            --bg-primary: #f5f6fa;
+            --bg-secondary: #ffffff;
+            --bg-navbar: #2c3e50;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --text-navbar: #ecf0f1;
+            --accent: #3498db;
+            --accent-hover: #2980b9;
+            --danger: #e74c3c;
+            --danger-hover: #c0392b;
+            --card-bg: #ffffff;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --bg-navbar: #0f0f23;
+            --text-primary: #ecf0f1;
+            --text-secondary: #95a5a6;
+            --text-navbar: #ecf0f1;
+            --accent: #3498db;
+            --accent-hover: #5dade2;
+            --danger: #e74c3c;
+            --danger-hover: #ec7063;
+            --card-bg: #1e2a3a;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 1rem;
+            background: var(--bg-navbar);
+            color: var(--text-navbar);
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--text-navbar);
+            font-weight: 600;
+        }
+
+        .navbar-icon {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+
+        .navbar-version {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        .navbar-user {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-name {
+            color: var(--accent);
+        }
+
+        .theme-toggle {
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+
+        .logout-btn {
+            padding: 0.4rem 0.8rem;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .content {
+            flex: 1;
+            overflow: auto;
+            background: var(--bg-primary);
+        }
+
+        #message-banner {
+            position: fixed;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            z-index: 10000;
+            display: none;
+            max-width: 600px;
+            white-space: pre-line;
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        #message-banner.show {
+            display: block;
+        }
+
+        /* Shared components */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--text-secondary);
+            border-radius: 4px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: var(--danger-hover);
+        }
+
+        .btn-full {
+            display: block;
+            width: 100%;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+
+        /* Removed unused selectors: .text-muted and .mono */
+
+        .zone {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--text-secondary);
+        }
+
+        .zone:last-child {
+            border-bottom: none;
+        }
+
+        .zone p {
+            margin: 0 0 1rem 0;
+            text-align: center;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">
+            <img src="{% static 'images/logo.png' %}" alt="Paperless Annotations" class="navbar-icon">
+            <span>
+                Paperless Annotations
+                <span class="navbar-version">v{{version}}</span>
+            </span>
+        </a>
+
+        <div class="navbar-user">
+            <button class="theme-toggle" id="theme-toggle" title="Toggle theme">
+                🌙
+            </button>
+            {% if user.is_authenticated %}
+            <div class="user-info">
+                <span>👤</span>
+                <span class="user-name">
+                    {{ user.username }}
+                    {% if user.display_name %}
+                    ({{ user.display_name }})
+                    {% endif %}</span>
+            </div>
+            <form method="post" action="/logout/" style="margin: 0;">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div id="message-banner" role="alert" aria-live="polite"></div>
+
+    <main class="content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+
+        function updateThemeIcon() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            themeToggle.textContent = isDark ? '☀️' : '🌙';
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon();
+
+            // Dispatch event for other components (e.g., PDF viewer)
+            window.dispatchEvent(new CustomEvent('themechange', { detail: { theme: newTheme } }));
+        }
+
+        themeToggle.addEventListener('click', toggleTheme);
+        updateThemeIcon();
+
+        // Message banner functionality
+        const BANNER_TIMEOUT_MS = 10000;
+        let bannerTimeoutId = null;
+
+        window.showMessage = (message) => {
+            const banner = document.getElementById('message-banner');
+            banner.textContent = message;
+            banner.classList.add('show');
+
+            if (bannerTimeoutId) clearTimeout(bannerTimeoutId);
+            bannerTimeoutId = setTimeout(() => banner.classList.remove('show'), BANNER_TIMEOUT_MS);
+        };
+    </script>
+
+    {% if messages %}
+    <script>
+        (function () {
+            const messages = [
+                {% for message in messages %}
+                "{{ message|escapejs }}",
+            {% endfor %}
+            ];
+
+        if (messages.length > 0) {
+            window.showMessage(messages.join('\n\n'));
+        }
+        }) ();
+    </script>
+    {% endif %}
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Home - Paperless Annotations{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="text-center" style="margin-bottom: 2rem;">
+        <img src="{% static 'images/logo.png' %}" alt="Paperless Annotations logo"
+            style="width: 128px; height: 128px; display: block; margin: 0 auto 0.75rem;">
+        <h1 style="margin:0;">Welcome to Paperless Annotations</h1>
+    </div>
+
+    {% if request.user.is_authenticated %}
+    <div class="card">
+        {% if request.user.is_staff %}
+        <div class="zone">
+            <p>👤 Admin Zone</p>
+            <div class="toolbar" style="flex-direction:column; align-items:stretch; gap:0.5rem;">
+                <a href="/admin/" class="btn btn-full">Open admin panel</a>
+                <a href="{% url 'create_user' %}" class="btn btn-full">Create a new user</a>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if last_viewed_docs %}
+        <div class="zone">
+            <p>📄 Recently viewed documents</p>
+            <div class="toolbar">
+                <ul style="margin:0; padding-left:1.25rem;">
+                    {% for doc in last_viewed_docs %}
+                    <li>
+                        {% comment %} Use tuple form only: (id, title) => doc.0, doc.1 {% endcomment %}
+                        {% with doc_id=doc.0 doc_title=doc.1 %}
+                        <a href="{% url 'view_document' doc_id %}" title="{{ doc_title|default:" (untitled)"|escape }}"
+                            aria-label="{{ doc_title|default:" (untitled)"|escape }}">
+                            {{ doc_title|default:"(untitled)"|truncatechars:70 }}</a>
+                        <small style="color:var(--muted-color, #666);"> (ID: {{ doc_id }})</small>
+                        {% endwith %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="zone">
+            <p>🔎 System Info</p>
+            <div class="toolbar" style="flex-direction:column; align-items:flex-start; gap:0.25rem;">
+                <ul style="margin:0; padding-left:1.25rem;">
+                    {% for key, value in infos.items %}
+                    <li>{{ key }}:
+                        {{ value|urlize|safe }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="zone">
+            <p>⚠️ Danger Zone</p>
+            <div class="toolbar" style="flex-direction:column; align-items:stretch; gap:0.75rem;">
+                <form method="post" action="{% url 'remove_document_links' %}" style="width:100%;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-full"
+                        onclick="return confirm('Remove annotation view links from all documents?')">Remove all links to
+                        Paperless Annotations from my documents</button>
+                </form>
+                <form method="post" action="{% url 'delete_all_annotations' %}" style="width:100%;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-full"
+                        onclick="return confirm('Delete ALL annotations? This cannot be undone.')">Remove all
+                        annotations from my documents</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="card text-center">
+        <p>You are not logged in. Please log in to access your documents.</p>
+        <div class="toolbar" style="flex-direction:column; align-items:stretch; gap:0.5rem;">
+            <a href="{% url 'login' %}" class="btn btn-full">Login</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

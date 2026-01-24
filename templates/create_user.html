@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ title }} - Paperless Annotations{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="text-center">
+        <img src="{% static 'images/logo.png' %}" alt="Paperless Annotations logo"
+            style="width: 128px; height: 128px; display: block; margin: 0 auto 0.75rem;">
+        <h1>{{ title }}</h1>
+    </div>
+    <div class="card">
+
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required autofocus>
+            </div>
+
+            <div class="form-group">
+                <label for="password1">Password</label>
+                <input type="password" id="password1" name="password1" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password2">Confirm Password</label>
+                <input type="password" id="password2" name="password2" required>
+            </div>
+
+            <div class="form-group">
+                <label for="paperless_api_token">Paperless API Token</label>
+                <input type="password" id="paperless_api_token" name="paperless_api_token">
+            </div>
+
+            <div class="form-group">
+                <label for="display_name">Author display name in annotations (optional)</label>
+                <input type="text" id="display_name" name="display_name">
+            </div>
+
+            <button type="submit" class="btn btn-full">Create Account</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

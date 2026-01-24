@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ doc_name }} - Paperless Annotations{% endblock %}
+
+{% block extra_head %}
+<style>
+  body {
+    overflow: hidden;
+  }
+
+  .content {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #pdf-viewer {
+    width: 100%;
+    height: 100%;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="pdf-viewer"></div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script type="module">
+  import { PaperlessAnnotationsViewer } from "{% static 'annotator.js' %}";
+
+  const config = {
+    author: "{{ username }}",
+    docId: {{ doc_id }},
+  paperlessUrl: "{{ paperless_url }}"
+  };
+
+  const annotator = new PaperlessAnnotationsViewer(config.docId, config.author, config.paperlessUrl);
+  window._ANNOTATOR = annotator;
+</script>
+{% endblock %}

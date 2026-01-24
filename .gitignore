@@ -1,0 +1,18 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+
+# ignore node_modules
+node_modules/
+
+# Virtual environments
+.venv
+db.sqlite3
+.env
+staticfiles
+logs/

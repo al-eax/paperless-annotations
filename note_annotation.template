@@ -1,0 +1,5 @@
+Author: {{author}}
+Page: {{page}}
+Date: {{created}}
+{% if comment %}Comment: {{comment}}{% endif %}
+{% if text %}text: {{text}}{% endif %}
