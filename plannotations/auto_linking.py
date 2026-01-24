@@ -1,5 +1,6 @@
 import logging
 import time
+from django.urls import reverse
 from core.settings import (
     BASE_URL,
     CUSTOM_FIELD_NAME,
@@ -70,7 +71,7 @@ def update_document_links(ppl: PaperlessAPI, docs_to_skip: list[int] | None = No
         ppl.add_custom_field_to_document(
             doc,
             custom_field.id,
-            f"{BASE_URL}/view/{doc.id}",
+            BASE_URL + "/" + reverse("view_document", kwargs={"doc_id": doc.id}),
         )
         updated_docs.append(doc.id)
 
@@ -81,7 +82,7 @@ def update_document_links(ppl: PaperlessAPI, docs_to_skip: list[int] | None = No
         ppl.add_custom_field_to_document(
             doc,
             custom_field.id,
-            f"{BASE_URL}/view/{doc.id}",
+            BASE_URL + "/" + reverse("view_document", kwargs={"doc_id": doc.id}),
         )
         updated_docs.append(doc.id)
     return updated_docs

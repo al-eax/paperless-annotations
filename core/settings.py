@@ -175,7 +175,7 @@ LOGGING = {
 # custom settings for plannotations
 PAPERLESS_URL = os.environ.get("PAPERLESS_URL")
 assert PAPERLESS_URL, "PAPERLESS_URL must be set in environment variables."
-BASE_URL = os.environ.get("BASE_URL", "http://localhost:8000")
+BASE_URL = os.environ.get("BASE_URL", "http://localhost:8000").rstrip("/")
 CUSTOM_FIELD_NAME = os.environ.get("CUSTOM_FIELD_NAME", "Annotations")
 ENABLE_AUTO_UPDATE_LINKS = _is_true(os.environ.get("ENABLE_AUTO_UPDATE_LINKS", "true"))
 UPDATE_INTERVAL_MINS = int(os.environ.get("UPDATE_INTERVAL_MINS", "60"))
