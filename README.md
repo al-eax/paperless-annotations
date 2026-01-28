@@ -38,7 +38,7 @@ cp .env.example .env
 docker-compose up -d
 ```
 
-By default volumes are from `./db` and `./note_annotation.template` are mapped to persist the database and forward the annotation note template.
+By default a named volume `db_data` and a bind mount for `./note_annotation.template` is created.
 
 
 ### Manual installation
@@ -115,6 +115,12 @@ The name of the custom field can be set using the `CUSTOM_FIELD_NAME` environmen
 Ensure the `BASE_URL` environment variable points to the base URL where Paperless Annotations is hosted.
 
 The update interval can be configured using the `UPDATE_INTERVAL_MINS` environment variable (default is `60` minutes).
+
+### Using the webhook
+
+Paperless Annotations can receive webhooks from Paperless-ngx to automatically update document links when new documents are added.
+Therefore in Paperless-ngx create a new workflow and set `Trigger Workflow On` to `Document Added`, `Apply Action` to `Webhook` and 
+set the `Webhook url` to `http://<your-server-address>:8000/webhooks/document_added`.
 
 
 ### Annotation Storage
