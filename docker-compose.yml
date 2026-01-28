@@ -10,7 +10,10 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE=core.settings
     volumes:
-      - ./db/:/app/db/
+      - db_data:/app/db/
       - ./note_annotation.template:/app/note_annotation.template
-      # - ./logs/:/app/logs/
     restart: unless-stopped
+
+volumes:
+  db_data:
+    driver: local
