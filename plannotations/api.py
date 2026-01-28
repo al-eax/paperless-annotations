@@ -79,7 +79,7 @@ def delete_document_anno(request, doc_id: int, db_id: int, annotation: Annotatio
 
 
 @api.post("/webhooks/document_added", auth=None)
-def document_added_webhook(_):
+def document_added_webhook(request):  # pylint: disable=unused-argument
     """Webhook endpoint to trigger link update when a new document is added."""
     task_auto_update_links.enqueue()
     return {"status": "ok"}
