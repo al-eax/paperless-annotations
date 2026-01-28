@@ -181,4 +181,4 @@ ENABLE_AUTO_UPDATE_LINKS = _is_true(os.environ.get("ENABLE_AUTO_UPDATE_LINKS", "
 UPDATE_INTERVAL_MINS = int(os.environ.get("UPDATE_INTERVAL_MINS", "60"))
 ANNO_SERIALIZER = os.environ.get("ANNO_SERIALIZER", "85gj")
 ANNO_STORAGE = os.environ.get("ANNO_STORAGE", "paperless_notes").lower()
-VERSION = "0.0.1"
+VERSION = "0.1.0"
