@@ -87,9 +87,13 @@ wheels = [
 [[package]]
 name = "django-ez-tasks"
 version = "0.0.1"
-source = { git = "https://github.com/al-eax/django_ez_tasks.git#40b279a0dd70fdf72430bf9990979a7a8dd178e5" }
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/84/c0/195648237839e343c0eb0dbbe68cc8b8d8f70673188a669075c873c12a73/django_ez_tasks-0.0.1.tar.gz", hash = "sha256:f175fa3576736ffdf0077c74f388c15708926812990163033d1625ab6cd8dc12", size = 5610, upload-time = "2026-02-23T23:17:07.639Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f6/1f/f3e98a9d574600d130c5b8e4177763930b6ad1843b66b055a46ec2a5ad06/django_ez_tasks-0.0.1-py3-none-any.whl", hash = "sha256:718681b7edc366d27eb3b569a1ff5876e0018f3246e7dcfa653257391f3d0864", size = 5647, upload-time = "2026-02-23T23:17:05.442Z" },
 ]
 
 [[package]]
@@ -154,7 +158,7 @@ wheels = [
 
 [[package]]
 name = "paperless-annotations"
-version = "0.1.0"
+version = "0.1.1"
 source = { virtual = "." }
 dependencies = [
     { name = "django" },
@@ -170,7 +174,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "django", specifier = ">=6.0" },
-    { name = "django-ez-tasks", git = "https://github.com/al-eax/django_ez_tasks.git" },
+    { name = "django-ez-tasks" },
     { name = "django-ninja", specifier = ">=1.5.1" },
     { name = "dotenv", specifier = ">=0.9.9" },
     { name = "gunicorn", specifier = ">=23.0.0" },
