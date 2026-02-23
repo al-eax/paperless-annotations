@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from datetime import datetime
 from pathlib import Path
 import os
+import tomllib
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -181,4 +182,6 @@ ENABLE_AUTO_UPDATE_LINKS = _is_true(os.environ.get("ENABLE_AUTO_UPDATE_LINKS", "
 UPDATE_INTERVAL_MINS = int(os.environ.get("UPDATE_INTERVAL_MINS", "60"))
 ANNO_SERIALIZER = os.environ.get("ANNO_SERIALIZER", "85gj")
 ANNO_STORAGE = os.environ.get("ANNO_STORAGE", "paperless_notes").lower()
-VERSION = "0.1.0"
+
+with open(BASE_DIR / "pyproject.toml", "rb") as f:
+    VERSION = tomllib.load(f)["project"]["version"]
