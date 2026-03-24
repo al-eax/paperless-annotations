@@ -93,7 +93,10 @@ Or use the web-based initializer at `http://<your-server-address>:8000/initializ
 - `SECRET_KEY` - Django secret key (choose a random string)
 - `DEBUG` - Enable Django debug mode (`true`/`false`); set to `false` in production
 - `LOG_LEVEL` - Logging level `DEBUG`, `INFO`, `WARNING`, `ERROR` (default: `INFO` for production, `DEBUG` for debug mode)
-- `ALLOWED_HOSTS` - Comma-separated list of allowed hosts
+- `ALLOWED_HOSTS` - Comma-separated list of hostnames this app will accept in the `Host` header
+- `CSRF_TRUSTED_ORIGINS` - Comma-separated list of trusted origins for CSRF-protected requests, useful when serving behind a reverse proxy (e.g. `https://annotations.example.com`)
+- `USE_X_FORWARDED_HOST` - Set to `true` when your reverse proxy sends `X-Forwarded-Host` and you want Django to use it for host/url generation
+- `SECURE_PROXY_SSL_HEADER` - Set to `true` when TLS is terminated at the reverse proxy and it sends `X-Forwarded-Proto: https`; this makes Django treat requests as secure
 - `PAPERLESS_URL` - URL to your Paperless-ngx instance
 - `BASE_URL` - Base URL where Paperless Annotations is hosted (e.g. `http://localhost:8000` or `https://annotations.yourdomain.com`)
 - `ANNO_SERIALIZER` - Name of the annotation serializer - see "Customize annotations format" below (default: `85gj`)
@@ -101,6 +104,7 @@ Or use the web-based initializer at `http://<your-server-address>:8000/initializ
 - `UPDATE_INTERVAL_MINS` - Interval (minutes) for automatic link updates (default: `60`)
 - `CUSTOM_FIELD_NAME` - Name of the custom field in Paperless-ngx used to store document links (Default: `Annotations`)
 - `ANNO_STORAGE` - Annotation storage backend: `paperless_notes` or `database` (default: `paperless_notes`)
+
 
 ## Auto-update document links
 

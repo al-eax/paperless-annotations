@@ -33,11 +33,19 @@ def _is_true(x):
     return str(x).lower() in ["1", "true"]
 
 
+def _split_csv(value):
+    return [item.strip() for item in str(value).split(",") if item.strip()]
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = _is_true(os.environ.get("DEBUG", "false"))
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+ALLOWED_HOSTS = _split_csv(os.environ.get("ALLOWED_HOSTS", "127.0.0.1,localhost"))
+CSRF_TRUSTED_ORIGINS = _split_csv(os.environ.get("CSRF_TRUSTED_ORIGINS", ""))
+USE_X_FORWARDED_HOST = _is_true(os.environ.get("USE_X_FORWARDED_HOST", "false"))
 
+if _is_true(os.environ.get("SECURE_PROXY_SSL_HEADER","false")):
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Application definition
 
@@ -177,6 +185,8 @@ LOGGING = {
 PAPERLESS_URL = os.environ.get("PAPERLESS_URL")
 assert PAPERLESS_URL, "PAPERLESS_URL must be set in environment variables."
 BASE_URL = os.environ.get("BASE_URL", "http://localhost:8000").rstrip("/")
+
+
 CUSTOM_FIELD_NAME = os.environ.get("CUSTOM_FIELD_NAME", "Annotations")
 ENABLE_AUTO_UPDATE_LINKS = _is_true(os.environ.get("ENABLE_AUTO_UPDATE_LINKS", "true"))
 UPDATE_INTERVAL_MINS = int(os.environ.get("UPDATE_INTERVAL_MINS", "60"))
